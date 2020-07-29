@@ -25,28 +25,6 @@ app.post('/events', async (req, res) => {
   res.send({});
 });
 
-app.listen(4003, async () => {
+app.listen(4003, () => {
   console.log('Listening on 4003');
-
-  const res = await axios.get('http://localhost:4005/events');
-
-  for (let event of res.data) {
-    console.log('Processing event:', event.type);
-
-    if (event.type === 'CommentCreated') {
-      const status = event.data.content.includes('orange') ? 'rejected' : 'approved';
-  
-      await axios.post('http://localhost:4005/events', {
-        type: 'CommentModerated',
-        data: {
-          id: event.data.id,
-          postId: event.data.postId,
-          status,
-          content: event.data.content
-        }
-      });
-  }
-
-}
-
 });
